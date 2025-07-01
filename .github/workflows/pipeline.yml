@@ -1,0 +1,36 @@
+name: Build e Deploy do Front-End
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Permite ao GITHUB_TOKEN fazer push no repositório
+
+    steps:
+      - name: 1. Clonar o repositório
+        uses: actions/checkout@v3
+
+      - name: 2. Simular build (validação dos arquivos)
+        run: |
+          echo "Validando arquivos..."
+          ls -la
+          file index.html styles.css script.js
+
+      - name: 3. Deploy no GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+
+      - name: 4. Logar URL do site publicado
+        run: |
+          echo "Seu site está disponível em: https://github.com/HelenMarques87/TrabalhoFinal.git"
+
+      - name: 5. Notificando o sucesso do deploy
+        run: |
+          echo "Deploy realizado com sucesso!"
